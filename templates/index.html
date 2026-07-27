@@ -3,20 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" href="../static/css/style.css"> -->
-    <link rel="stylesheet" href="{{ url_for('static', path='../static/css/style.css') }}">
-    <script src="{{ url_for('static', path='../static/js/script.js') }}"></script>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <script src="../static/js/script.js"></script>
+    <!-- <link rel="stylesheet" href="{{ url_for('static', path='../static/css/style.css') }}"> -->
+    <!-- <script src="{{ url_for('static', path='../static/js/script.js') }}"></script> -->
     <title>Todo List</title>
 </head>
 <body>
-    <form class="todo-list">
-        <div class="todo-nav">
+    <main class="todo-list">
+        <nav class="todo-nav">
             <h1>Todo List</h1>
-        </div>
-        <div class="todo-main">
-            
-        </div>
-        <button class="todo-add-btn">+</button>
-    </form>
+        </nav>
+        <article class="todo-main">
+            <div class="task-main">
+                <form class="task-left">
+                    <input type="checkbox">
+                    <textarea class="task-field" placeholder="Add a new task..."></textarea>
+                </form>
+                <button class="delete-task-btn">x</button>
+            </div>
+        </article>
+    </main>
 </body>
 </html>
