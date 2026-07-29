@@ -82,7 +82,7 @@ body {
     width: 100%;
 }
 
-.task-main {
+.task-template {
     display: flex;
     justify-content: space-between;
     padding: 0.5rem 1rem;
@@ -112,6 +112,10 @@ body {
 .task-field:focus {
     outline: none;
     caret-color: #f57caa;
+}
+
+.completed {
+    text-decoration: line-through;
 }
 
 .delete-task-btn {
