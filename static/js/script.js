@@ -1,25 +1,37 @@
-const taskContainer = document.querySelector(".todo-main")
+const taskContainer = document.querySelector('.todo-main')
+
+async function createTask(taskField) {
+    const response = await fetch('http://127.0.0.1:8000/todos', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                title: taskField.value.trim()
+            })
+        }
+    )
+    const todo = await response.json()
+}
 
 function setupTask(task) {
-    const taskField = task.querySelector(".task-field")
-    const deleteButton = task.querySelector(".delete-task-btn")
-    const checkBox = task.querySelector("input[type='checkbox']")
+    const taskField = task.querySelector('.task-field')
+    const deleteButton = task.querySelector('.delete-task-btn')
+    const checkBox = task.querySelector('input[type="checkbox"]')
     
-    let taskEntered = taskField.value.trim() !== ""
-    checkBox.disabled = taskField.value.trim() === ""
+    let taskEntered = taskField.value.trim() !== ''
+    checkBox.disabled = taskField.value.trim() === ''
 
-    taskField.addEventListener("keydown", (event) => {
-        if (event.key !== "Enter") return
+    taskField.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter') return
         event.preventDefault()
 
         const taskName = taskField.value.trim()
-        if (taskName === "") return
-        taskField.placeholder = ""
+        if (taskName === '') return
+        taskField.placeholder = ''
         
         const lastTask = taskContainer.lastElementChild
-        const lastTaskField = lastTask.querySelector(".task-field")
+        const lastTaskField = lastTask.querySelector('.task-field')
 
-        if (lastTaskField.value.trim() === "") {
+        if (lastTaskField.value.trim() === '') {
             lastTaskField.focus()
             return
         }
@@ -28,30 +40,31 @@ function setupTask(task) {
         checkBox.disabled = false
 
         const newTask = task.cloneNode(true)
-        newTask.removeAttribute("id")
+        newTask.removeAttribute('id')
 
-        const newTaskField = newTask.querySelector(".task-field")
-        newTaskField.value = ""
-        newTaskField.placeholder = "Add a new task..."
+        const newTaskField = newTask.querySelector('.task-field')
+        newTaskField.value = ''
+        newTaskField.placeholder = 'Add a new task...'
         
         taskContainer.appendChild(newTask)
         setupTask(newTask)
+        createTask(taskField)
         newTaskField.focus()
     })
     
-    deleteButton.addEventListener("click", () => {
+    deleteButton.addEventListener('click', () => {
         if (!taskEntered) return
         task.remove()
     })
 
-    checkBox.addEventListener("change", (event) => {
+    checkBox.addEventListener('change', (event) => {
         if (event.target.checked) {
-            taskField.classList.add("completed")
+            taskField.classList.add('completed')
         } else {
-            taskField.classList.remove("completed")
+            taskField.classList.remove('completed')
         }
     })
 }
 
-const originalTask = document.querySelector("#original-task")
+const originalTask = document.querySelector('#original-task')
 setupTask(originalTask)

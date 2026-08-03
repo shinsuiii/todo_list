@@ -30,14 +30,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Todo List Default */
+html {
+    height: 100vh;
+}
+
 body {
-    min-height: 100%;
     background:
         linear-gradient(
             135deg,
             rgb(245, 124, 170) 0%,
             #dd7fbe 50%,
-            #d15faf 100%
+            #c556a4 100%
     );
 }
 
