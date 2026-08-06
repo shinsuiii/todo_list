@@ -5,7 +5,7 @@ async function createTask(taskField) {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-                title: taskField.value.trim()
+                todo_name: taskField.value.trim()
             })
         }
     )
