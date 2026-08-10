@@ -12,6 +12,24 @@ async function createTask(taskField) {
     const todo = await response.json()
 }
 
+// async function completeTask() {
+//     const response = await fetch('http://127.0.0.1:8000/todos', {
+//         method: 'PUT',
+//         headers: {'Content-Type': 'application/json'},
+//         body: JSON.stringify({
+            
+//         })
+//     })
+//     const todo = await response.json()
+// }
+
+// async function deleteTask() {
+//     const response = await fetch('http://127.0.0.1:8000/todos', {
+//         method: 'DELETE',
+//     })
+//     const todo = await response.json()
+// }
+
 function setupTask(task) {
     const taskField = task.querySelector('.task-field')
     const deleteButton = task.querySelector('.delete-task-btn')
@@ -55,6 +73,7 @@ function setupTask(task) {
     deleteButton.addEventListener('click', () => {
         if (!taskEntered) return
         task.remove()
+        // deleteTask()
     })
 
     checkBox.addEventListener('change', (event) => {

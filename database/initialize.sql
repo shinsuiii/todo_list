@@ -1,7 +1,5 @@
 CREATE DATABASE "todo_db";
 
-
-
 SELECT * FROM "todo_list";
 DROP TABLE "todo_list";
 

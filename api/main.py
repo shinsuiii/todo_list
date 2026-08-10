@@ -1,10 +1,9 @@
 from pydantic import BaseModel
 from fastapi import FastAPI, Request
-from database.database import insert_task
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-
 from fastapi.exceptions import RequestValidationError
+from database.database import get_stored_tasks, insert_task
 
 
 
@@ -16,18 +15,27 @@ templates = Jinja2Templates(directory="templates")
 
 class TodoCreate(BaseModel):
     todo_name: str
-    completed: bool = False
 
 
 
-@app.get("/todos")
+@app.get("/")
 def index_todo(request: Request):
     return templates.TemplateResponse(request=request, name="index.html")
 
+@app.get("/todos")
+def get_stored_todo():
+    _ = get_stored_tasks()
+    print(_)
+    return 
+
 @app.post("/todos")
 def create_todo(todo: TodoCreate):
-    insert_task(todo)
-    return todo
+    modified_todo = insert_task(todo)
+    return modified_todo
+
+@app.delete("/todos/id")
+def delete_todo():
+    return
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
