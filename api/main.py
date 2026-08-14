@@ -23,10 +23,8 @@ def index_todo(request: Request):
     return templates.TemplateResponse(request=request, name="index.html")
 
 @app.get("/todos")
-def get_stored_todo():
-    _ = get_stored_tasks()
-    print(_)
-    return 
+def get_stored_todos():
+    return get_stored_tasks()
 
 @app.post("/todos")
 def create_todo(todo: TodoCreate):
