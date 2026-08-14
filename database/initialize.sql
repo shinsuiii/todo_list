@@ -1,9 +1,11 @@
 CREATE DATABASE "todo_db";
 
-SELECT * FROM "todo_list";
-DROP TABLE "todo_list";
-
 TRUNCATE TABLE "todo_list";
+
+SELECT * FROM "todo_list" ORDER BY todo_id ASC;
+
+DELETE FROM "todo_list" WHERE todo_id = 1;
 
 INSERT INTO "todo_list" VALUES (1, 'Buy groceries', FALSE);
 INSERT INTO "todo_list" VALUES (2, 'Cook rice', FALSE);
+INSERT INTO "todo_list" VALUES (3, 'Wash dishes', FALSE);
