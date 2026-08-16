@@ -12,7 +12,6 @@ function taskTemplate(todo) {
     if (currentTodo) {
         textArea.value = currentTodo.todo_name
         checkBox.disabled = false
-
         if (currentTodo.completed === true) {
             checkBox.checked = true
             textArea.classList.add('completed')
@@ -34,15 +33,17 @@ function taskTemplate(todo) {
     textArea.addEventListener('keydown', (event) => {
         if (event.key === 'Enter') {
             event.preventDefault()
-            const todo_name = textArea.value.trim()
-
-            if (todo_name === '') return
             
+            const todo_name = textArea.value.trim()
+            if (todo_name === '') return
 
-
-            createTask(todo_name).then((createdTodo) => {
-                currentTodo = createdTodo
-            })
+            if (currentTodo === undefined) {
+                createTask(todo_name).then((createdTodo) => {
+                    currentTodo = createdTodo
+                })
+            } else {
+                updateTask(currentTodo.todo_id, todo_name)
+            }
             checkBox.disabled = false
         }
     })
@@ -57,7 +58,9 @@ function taskTemplate(todo) {
 }
 
 async function getTasks() {
-    const response = await fetch('http://127.0.0.1:8000/todos', {method: 'GET'})
+    const response = await fetch('http://127.0.0.1:8000/todos', {
+        method: 'GET'
+    })
     const todos = await response.json()
     
     todos.forEach((todo) => {
@@ -69,7 +72,7 @@ async function createTask(todo_name) {
     const response = await fetch('http://127.0.0.1:8000/todos', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({'todo_name': todo_name})
+        body: JSON.stringify({'name': todo_name})
     })
 
     return await response.json()
@@ -79,14 +82,16 @@ async function updateTask(id, update) {
     const response = await fetch(`http://127.0.0.1:8000/todos/${id}`, {
         method: 'PATCH',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({'id': id,'update': update})
+        body: JSON.stringify({'update': update})
     })
 
     return await response.json()
 }
 
 async function deleteTask(id) {
-    const response = await fetch(`http://127.0.0.1:8000/todos/${id}`, {method: 'DELETE'})
+    const response = await fetch(`http://127.0.0.1:8000/todos/${id}`,{
+        method: 'DELETE'
+    })
     
     return await response.json()
 }

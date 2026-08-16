@@ -6,7 +6,7 @@ from fastapi.exceptions import RequestValidationError
 from database.database import get_stored_tasks, insert_task, update_task, delete_task
 
 class TodoCreate(BaseModel):
-    todo_name: str
+    name: str
 
 class TodoUpdate(BaseModel):
     update: bool | str
@@ -29,7 +29,7 @@ def get_stored_todos():
 
 @app.post("/todos")
 def create_todo(todo: TodoCreate):
-    return insert_task(todo)
+    return insert_task(todo.name)
 
 
 @app.patch("/todos/{id}")
