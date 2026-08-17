@@ -30,17 +30,21 @@ function taskTemplate(todo) {
         }
     })
 
-    textArea.addEventListener('keydown', (event) => {
+    textArea.addEventListener('keydown', async (event) => {
         if (event.key === 'Enter') {
             event.preventDefault()
             
             const todo_name = textArea.value.trim()
             if (todo_name === '') return
 
+            const taskCheck = await getTasks(todo_name)
+            
+            if (taskCheck.task_exists) {
+                alert("Task already exists!")
+                return
+            }
             if (currentTodo === undefined) {
-                createTask(todo_name).then((createdTodo) => {
-                    currentTodo = createdTodo
-                })
+                currentTodo = await createTask(todo_name)
             } else {
                 updateTask(currentTodo.todo_id, todo_name)
             }
@@ -57,15 +61,18 @@ function taskTemplate(todo) {
     textArea.focus()
 }
 
-async function getTasks() {
-    const response = await fetch('http://127.0.0.1:8000/todos', {
-        method: 'GET'
-    })
-    const todos = await response.json()
-    
-    todos.forEach((todo) => {
-        taskTemplate(todo)
-    });
+async function getTasks(todo_name) {
+    if (!todo_name) {
+        const response = await fetch('http://127.0.0.1:8000/todos')
+        const todos = await response.json()   
+        todos.forEach((todo) => {
+            taskTemplate(todo)
+        });
+
+    } else {
+        const response = await fetch(`http://127.0.0.1:8000/todos?name=${encodeURIComponent(todo_name)}`)
+        return await response.json()
+    }
 }
 
 async function createTask(todo_name) {

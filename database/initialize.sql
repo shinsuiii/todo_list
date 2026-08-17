@@ -3,6 +3,7 @@ CREATE DATABASE todo_db;
 TRUNCATE TABLE todo_list;
 
 SELECT * FROM todo_list ORDER BY todo_id ASC;
+SELECT * FROM todo_list WHERE todo_name = 'Oliviaaa';
 
 DELETE FROM todo_list WHERE todo_id = 1;
 

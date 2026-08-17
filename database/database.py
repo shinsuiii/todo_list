@@ -17,8 +17,9 @@ connection_params: str = f"""
 def time_now():
     return datetime.now().replace(microsecond=0)
 
-def get_stored_tasks():
+def get_stored_tasks(todo_name: str | None):
     stored_tasks: list = []
+    todo_exists: dict = {"todo_exists": False}
     with psycopg.connect(connection_params, autocommit=True) as connection:
         with connection.cursor(row_factory=dict_row) as cursor:
             cursor.execute('SELECT * FROM todo_list ORDER BY todo_id ASC;')
@@ -26,7 +27,16 @@ def get_stored_tasks():
             for task in all_tasks:
                 selected_info: list = list(task.items())[:3]
                 stored_tasks.append(dict(selected_info))
-            return stored_tasks
+            
+            if todo_name:
+                cursor.execute("SELECT * FROM todo_list WHERE todo_name = %(todo_name)s;", {"todo_name": todo_name})
+                existing_task = cursor.fetchone()
+                if not existing_task:
+                    return {"task_exists": False}
+                else:
+                    return {"task_exists": True}
+            else:
+                return stored_tasks
 
 def insert_task(name: str):
     with psycopg.connect(connection_params, autocommit=True) as connection:

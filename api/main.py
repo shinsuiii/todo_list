@@ -5,6 +5,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.exceptions import RequestValidationError
 from database.database import get_stored_tasks, insert_task, update_task, delete_task
 
+
 class TodoCreate(BaseModel):
     name: str
 
@@ -23,8 +24,8 @@ def index_todo(request: Request):
 
 
 @app.get("/todos")
-def get_stored_todos():
-    return get_stored_tasks()
+def get_stored_todos(name: str | None = None):
+    return get_stored_tasks(name)
 
 
 @app.post("/todos")
