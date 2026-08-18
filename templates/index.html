@@ -10,13 +10,60 @@
     <title>Todo List</title>
 </head>
 <body>
+    <nav class="nav-bar">
+        <h1>TODO</h1>
+        <div class="nav-right">
+            <button class="nav-link" id="loginBtn">Log In</button>
+            <button class="nav-link" id="signupBtn">Sign Up</button>
+        </div>
+    </nav>
+    <div class="overlay hidden" id="modalOverlay">
+        <div class="modal hidden" id="modalContainer">
+            <button type="button" id="closeModal">x</button>
+            <form class="panel hidden" id="panelSignUp">
+                <h1>Create account</h1>
+                <div class="field" id="signupEmailField">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" placeholder="yourname@example.com" required>
+                </div>
+                <div class="field" id="signupPasswordField">
+                    <label for="signupPassword">Password</label>
+                    <div class="passwordWrapper">
+                        <input type="password" id="signupPassword" placeholder="********" required>
+                        <img src="../assets/img/eye-closed.svg" class="fieldImg">
+                    </div>
+                </div>
+                <button type="submit"><b>Create account</b></button>
+                <div class="switchText" id="switchToLogin">
+                    <p>Have an account? <a>Log in</a></p>
+                </div>
+            </form>
+            <form class="panel hidden" id="panelLogIn">
+                <h1>Log in</h1>
+                <div class="field" id="loginEmailField">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="yourname@example.com" required>
+                </div>
+                <div class="field" id="loginPasswordField">
+                    <label for="loginPassword">Password</label>
+                    <div class="passwordWrapper">
+                        <input type="password" id="loginPassword" placeholder="********" required>
+                        <img src="../assets/img/eye-closed.svg" class="fieldImg">
+                    </div>
+                </div>
+                <button type="submit"><b>Log in</b></button>
+                <div class="switchText" id="switchToSignup">
+                    <p>Don't have an an account? <a>Create account</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
     <main class="todo-list">
-        <nav class="todo-nav">
+        <div class="todo-nav">
             <h1>Todo List</h1>
             <button id="add-task">+</button>
-        </nav>
+        </div>
         <article id="todo-main"></article>
-
         <template id="todo-template">
             <div class="task">
                 <div class="task-left">

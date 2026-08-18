@@ -2,6 +2,53 @@ const template = document.getElementById('todo-template')
 const container = document.getElementById('todo-main')
 const addTaskBtn = document.getElementById('add-task')
 
+const overlay = document.getElementById('modalOverlay')
+const modal = document.getElementById('modalContainer')
+const signupBtn = document.getElementById('signupBtn')
+const signupForm = document.getElementById('panelSignUp')
+const switchToSignup = document.getElementById('switchToSignup')
+const loginBtn = document.getElementById('loginBtn')
+const loginForm = document.getElementById('panelLogIn')
+const switchToLogin = document.getElementById('switchToLogin')
+const closeFormBtn = document.getElementById('closeModal')
+
+signupBtn.addEventListener('click', () => {
+    showModal(signupForm)
+})
+
+switchToSignup.addEventListener('click', () => {
+    showModal(signupForm)
+})
+
+loginBtn.addEventListener('click', () => {
+    showModal(loginForm)
+})
+
+switchToLogin.addEventListener('click', () => {
+    showModal(loginForm)
+})
+
+closeFormBtn.addEventListener('click', () => {
+    hideModal()
+})
+
+function showModal(form) {
+    overlay.classList.remove('hidden')
+    modal.classList.remove('hidden')
+
+    signupForm.classList.add('hidden')
+    loginForm.classList.add('hidden')
+
+    form.classList.remove('hidden')
+}
+
+function hideModal() {
+    overlay.classList.add('hidden')
+    modal.classList.add('hidden')
+    signupForm.classList.add('hidden')
+    loginForm.classList.add('hidden')
+}
+
 function taskTemplate(todo) {
     let currentTodo = todo
     const clone = document.importNode(template.content, true)
@@ -52,7 +99,7 @@ function taskTemplate(todo) {
         }
     })
 
-    removeTaskBtn.addEventListener('dblclick', (event) => {
+    removeTaskBtn.addEventListener('click', (event) => {
         event.target.parentElement.remove()
         if (currentTodo) deleteTask(currentTodo.todo_id)
     })
