@@ -22,6 +22,10 @@
             <button type="button" id="closeModal">x</button>
             <form class="panel hidden" id="panelSignUp">
                 <h1>Create account</h1>
+                <div class="field" id="signupUsernameField">
+                    <label for="signupUsername">Username</label>
+                    <input type="text" id="signupUsername" placeholder="Your Name" required>
+                </div>
                 <div class="field" id="signupEmailField">
                     <label for="signupEmail">Email</label>
                     <input type="email" id="signupEmail" placeholder="yourname@example.com" required>
@@ -34,8 +38,8 @@
                     </div>
                 </div>
                 <button type="submit"><b>Create account</b></button>
-                <div class="switchText" id="switchToLogin">
-                    <p>Have an account? <a>Log in</a></p>
+                <div class="switchText">
+                    <p>Have an account? <a id="switchToLogin">Log in</a></p>
                 </div>
             </form>
             <form class="panel hidden" id="panelLogIn">
@@ -52,8 +56,8 @@
                     </div>
                 </div>
                 <button type="submit"><b>Log in</b></button>
-                <div class="switchText" id="switchToSignup">
-                    <p>Don't have an an account? <a>Create account</a></p>
+                <div class="switchText">
+                    <p>Don't have an an account? <a id="switchToSignup">Create account</a></p>
                 </div>
             </form>
         </div>

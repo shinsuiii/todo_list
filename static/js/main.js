@@ -12,6 +12,11 @@ const loginForm = document.getElementById('panelLogIn')
 const switchToLogin = document.getElementById('switchToLogin')
 const closeFormBtn = document.getElementById('closeModal')
 
+
+// modal.style.height = '20.75rem'
+
+const eyeIcons = document.querySelectorAll('.fieldImg')
+
 signupBtn.addEventListener('click', () => {
     showModal(signupForm)
 })
@@ -32,12 +37,37 @@ closeFormBtn.addEventListener('click', () => {
     hideModal()
 })
 
+window.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        hideModal()
+    }
+})
+
+eyeIcons.forEach(eye => {
+    eye.addEventListener('click', (event) => {
+        const passwordInputField = event.target.previousElementSibling
+        if (passwordInputField.type === 'password') {
+            passwordInputField.type = 'text'
+            eye.src = '../assets/img/eye-open.svg'
+        } else {
+            passwordInputField.type = 'password'
+            eye.src = '../assets/img/eye-closed.svg'
+        }
+    })
+})
+
 function showModal(form) {
     overlay.classList.remove('hidden')
     modal.classList.remove('hidden')
 
     signupForm.classList.add('hidden')
     loginForm.classList.add('hidden')
+
+    if (form.id === 'panelSignUp') {
+        modal.style.height = '26.75rem'
+    } else if (form.id === 'panelLogIn') {
+        modal.style.height = '22rem'
+    }
 
     form.classList.remove('hidden')
 }
