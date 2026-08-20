@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
-    <script defer src="{{ url_for('static', path='js/main.js') }}"></script> -->
-    <link rel="stylesheet" href="../static/css/style.css">
-    <script defer src="../static/js/main.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+    <script defer src="{{ url_for('static', path='js/main.js') }}"></script>
+    <!-- <link rel="stylesheet" href="../static/css/style.css">
+    <script defer src="../static/js/main.js"></script> -->
     <title>Todo List</title>
 </head>
 <body>
@@ -34,10 +34,11 @@
                     <label for="signupPassword">Password</label>
                     <div class="passwordWrapper">
                         <input type="password" id="signupPassword" placeholder="********" required>
-                        <img src="../assets/img/eye-closed.svg" class="fieldImg">
+                        <!-- <img src="../assets/img/eye-closed.svg" class="fieldImg"> -->
+                        <img src="{{ url_for('static', path='assets/img/eye-closed.svg') }}" class="fieldImg">
                     </div>
                 </div>
-                <button type="submit"><b>Create account</b></button>
+                <button type="submit" id="createAccountBtn"><b>Create account</b></button>
                 <div class="switchText">
                     <p>Have an account? <a id="switchToLogin">Log in</a></p>
                 </div>
@@ -52,10 +53,11 @@
                     <label for="loginPassword">Password</label>
                     <div class="passwordWrapper">
                         <input type="password" id="loginPassword" placeholder="********" required>
-                        <img src="../assets/img/eye-closed.svg" class="fieldImg">
+                        <!-- <img src="../assets/img/eye-closed.svg" class="fieldImg"> -->
+                        <img src="{{ url_for('static', path='assets/img/eye-open.svg') }}" class="fieldImg">
                     </div>
                 </div>
-                <button type="submit"><b>Log in</b></button>
+                <button type="submit" id="loginAccountBtn"><b>Log in</b></button>
                 <div class="switchText">
                     <p>Don't have an an account? <a id="switchToSignup">Create account</a></p>
                 </div>

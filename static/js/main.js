@@ -4,18 +4,51 @@ const addTaskBtn = document.getElementById('add-task')
 
 const overlay = document.getElementById('modalOverlay')
 const modal = document.getElementById('modalContainer')
+
 const signupBtn = document.getElementById('signupBtn')
 const signupForm = document.getElementById('panelSignUp')
 const switchToSignup = document.getElementById('switchToSignup')
 const loginBtn = document.getElementById('loginBtn')
 const loginForm = document.getElementById('panelLogIn')
 const switchToLogin = document.getElementById('switchToLogin')
+
 const closeFormBtn = document.getElementById('closeModal')
-
-
-// modal.style.height = '20.75rem'
-
 const eyeIcons = document.querySelectorAll('.fieldImg')
+
+const createAccountBtn = document.getElementById('createAccountBtn')
+const loginAccountBtn = document.getElementById('loginAccountBtn')
+
+
+async function createAccount(user_info) {
+    const response = await fetch('http://127.0.0.1:8000/users', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: {
+            username: user_info.username,
+            email: user_info.email,
+            password: user_info.password,
+        }
+    })
+    const user = await response.json()
+}
+
+createAccountBtn.addEventListener('click', async (event) => {
+    event.preventDefault()
+    createAccountBtn.disabled = true
+    
+    const username = document.getElementById('signupUsername')
+    const email = document.getElementById('signupEmail')
+    const password = document.getElementById('signupPassword')
+    const user_info = {
+        username: username,
+        email: email,
+        password: password,
+    }
+    await createAccount(user_info)
+    createAccountBtn.disabled = false
+})
+
+
 
 signupBtn.addEventListener('click', () => {
     showModal(signupForm)
@@ -42,16 +75,19 @@ window.addEventListener('keydown', (event) => {
         hideModal()
     }
 })
+window.addEventListener('beforeunload', (event) => {
+    event.preventDefault()
+})
 
 eyeIcons.forEach(eye => {
     eye.addEventListener('click', (event) => {
         const passwordInputField = event.target.previousElementSibling
         if (passwordInputField.type === 'password') {
             passwordInputField.type = 'text'
-            eye.src = '../assets/img/eye-open.svg'
+            eye.src = '/static/assets/img/eye-open.svg'
         } else {
             passwordInputField.type = 'password'
-            eye.src = '../assets/img/eye-closed.svg'
+            eye.src = '/static/assets/img/eye-closed.svg'
         }
     })
 })
