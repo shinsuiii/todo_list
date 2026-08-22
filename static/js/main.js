@@ -1,69 +1,51 @@
 const template = document.getElementById('todo-template')
 const container = document.getElementById('todo-main')
 const addTaskBtn = document.getElementById('add-task')
-
 const overlay = document.getElementById('modalOverlay')
 const modal = document.getElementById('modalContainer')
 
 const signupBtn = document.getElementById('signupBtn')
-const signupForm = document.getElementById('panelSignUp')
-const switchToSignup = document.getElementById('switchToSignup')
 const loginBtn = document.getElementById('loginBtn')
+const signupForm = document.getElementById('panelSignUp')
 const loginForm = document.getElementById('panelLogIn')
+const switchToSignup = document.getElementById('switchToSignup')
 const switchToLogin = document.getElementById('switchToLogin')
-
-const closeFormBtn = document.getElementById('closeModal')
-const eyeIcons = document.querySelectorAll('.fieldImg')
-
 const createAccountBtn = document.getElementById('createAccountBtn')
 const loginAccountBtn = document.getElementById('loginAccountBtn')
+const signupUsernameField = document.getElementById('signupUsername')
+const signupEmailField = document.getElementById('signupEmail')
+const signupPasswordField = document.getElementById('signupPassword')
+const loginEmailField = document.getElementById('loginEmail')
+const loginPasswordField = document.getElementById('loginPassword')
+const regexUsername = /^[a-zA-Z0-9_ ]{3,30}$/
+const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
+const closeFormBtn = document.getElementById('closeModal')
 
-
-async function createAccount(user_info) {
-    const response = await fetch('http://127.0.0.1:8000/users', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: {
-            username: user_info.username,
-            email: user_info.email,
-            password: user_info.password,
-        }
-    })
-    const user = await response.json()
-}
-
-createAccountBtn.addEventListener('click', async (event) => {
-    event.preventDefault()
-    createAccountBtn.disabled = true
-    
-    const username = document.getElementById('signupUsername')
-    const email = document.getElementById('signupEmail')
-    const password = document.getElementById('signupPassword')
-    const user_info = {
-        username: username,
-        email: email,
-        password: password,
-    }
-    await createAccount(user_info)
-    createAccountBtn.disabled = false
-})
+const eyeIcons = document.querySelectorAll('.fieldImg')
+const remPerError = 3
 
 
 
+// User Registration
 signupBtn.addEventListener('click', () => {
     showModal(signupForm)
+    signupUsernameField.focus()
 })
 
 switchToSignup.addEventListener('click', () => {
     showModal(signupForm)
+    signupUsernameField.focus()
 })
 
 loginBtn.addEventListener('click', () => {
     showModal(loginForm)
+    loginEmailField.focus()
 })
 
 switchToLogin.addEventListener('click', () => {
     showModal(loginForm)
+    loginEmailField.focus()
 })
 
 closeFormBtn.addEventListener('click', () => {
@@ -75,9 +57,10 @@ window.addEventListener('keydown', (event) => {
         hideModal()
     }
 })
-window.addEventListener('beforeunload', (event) => {
-    event.preventDefault()
-})
+// confirms reload of website
+// window.addEventListener('beforeunload', (event) => {
+//     event.preventDefault()
+// })
 
 eyeIcons.forEach(eye => {
     eye.addEventListener('click', (event) => {
@@ -92,20 +75,29 @@ eyeIcons.forEach(eye => {
     })
 })
 
+createAccountBtn.addEventListener('click', async (event) => {
+    event.preventDefault()
+    createAccountBtn.disabled = true
+    
+    const user_info = {
+        username: signupUsernameField.value,
+        email: signupEmailField.value,
+        password: signupPasswordField.value,
+    }
+    console.log(user_info)
+    await createAccount(user_info)
+    createAccountBtn.disabled = false
+})
+
 function showModal(form) {
     overlay.classList.remove('hidden')
     modal.classList.remove('hidden')
 
     signupForm.classList.add('hidden')
     loginForm.classList.add('hidden')
-
-    if (form.id === 'panelSignUp') {
-        modal.style.height = '26.75rem'
-    } else if (form.id === 'panelLogIn') {
-        modal.style.height = '22rem'
-    }
-
     form.classList.remove('hidden')
+
+    adjustModalHeight()
 }
 
 function hideModal() {
@@ -115,6 +107,52 @@ function hideModal() {
     loginForm.classList.add('hidden')
 }
 
+function adjustModalHeight() {
+    const activeForm = signupForm.classList.contains('hidden') ? loginForm : signupForm
+    if (activeForm.classList.contains('hidden')) return
+
+    const baseHeight = activeForm === signupForm ? 26.75 : 22
+    const visibleErrors = activeForm.querySelectorAll('.errorMessage:not(.hidden)').length
+    modal.style.height = `${baseHeight + (visibleErrors * remPerError)}rem`
+}
+
+function checkField (field, regex, error) {
+    verified = field.value.trim()
+    if (regex.test(verified)) {
+        error.classList.add('hidden')
+    } else {
+        error.classList.remove('hidden')
+    }
+    adjustModalHeight()
+}
+
+function blurValidation (field, regex, error) {
+    let blurred = false
+    field.addEventListener('input', () => {
+        if (blurred) checkField(field, regex, error)
+    })
+    field.addEventListener('blur', () => {
+        blurred = true
+        checkField(field, regex, error)
+    })
+}
+
+async function createAccount(user_info) {
+    const response = await fetch('http://127.0.0.1:8000/users', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            username: user_info.username,
+            email: user_info.email,
+            password: user_info.password,
+        })
+    })
+    const user = await response.json()
+}
+
+
+
+// Task Operations
 function taskTemplate(todo) {
     let currentTodo = todo
     const clone = document.importNode(template.content, true)
@@ -181,7 +219,7 @@ async function getTasks(todo_name) {
         todos.forEach((todo) => {
             taskTemplate(todo)
         });
-
+        
     } else {
         const response = await fetch(`http://127.0.0.1:8000/todos?name=${encodeURIComponent(todo_name)}`)
         return await response.json()
@@ -221,4 +259,8 @@ addTaskBtn.addEventListener('click', (event) => {
 })
 
 
+
+blurValidation(signupUsernameField, regexUsername, document.getElementById('errorUsername'))
+blurValidation(signupEmailField, regexEmail, document.getElementById('errorEmail'))
+blurValidation(signupPasswordField, regexPassword, document.getElementById('errorPassword'))
 getTasks()

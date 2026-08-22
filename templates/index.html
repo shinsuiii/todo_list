@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
-    <script defer src="{{ url_for('static', path='js/main.js') }}"></script>
-    <!-- <link rel="stylesheet" href="../static/css/style.css">
-    <script defer src="../static/js/main.js"></script> -->
+    <!-- <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+    <script defer src="{{ url_for('static', path='js/main.js') }}"></script> -->
+    <link rel="stylesheet" href="../static/css/style.css">
+    <script defer src="../static/js/main.js"></script>
+    <!-- comments are for live server testing -->
     <title>Todo List</title>
 </head>
 <body>
@@ -25,18 +26,20 @@
                 <div class="field" id="signupUsernameField">
                     <label for="signupUsername">Username</label>
                     <input type="text" id="signupUsername" placeholder="Your Name" required>
+                    <p class="errorMessage hidden" id="errorUsername">Username must contain at least (3) characters and (30) at maximum and no special characters.</p>
                 </div>
                 <div class="field" id="signupEmailField">
                     <label for="signupEmail">Email</label>
                     <input type="email" id="signupEmail" placeholder="yourname@example.com" required>
+                    <p class="errorMessage hidden" id="errorEmail">This email address looks wrong.</p>
                 </div>
                 <div class="field" id="signupPasswordField">
                     <label for="signupPassword">Password</label>
                     <div class="passwordWrapper">
                         <input type="password" id="signupPassword" placeholder="********" required>
-                        <!-- <img src="../assets/img/eye-closed.svg" class="fieldImg"> -->
                         <img src="{{ url_for('static', path='assets/img/eye-closed.svg') }}" class="fieldImg">
                     </div>
+                    <p class="errorMessage hidden" id="errorPassword">Must contain at least (8) characters, a number, and an uppercase and lowercase letter. </p>
                 </div>
                 <button type="submit" id="createAccountBtn"><b>Create account</b></button>
                 <div class="switchText">
@@ -53,7 +56,6 @@
                     <label for="loginPassword">Password</label>
                     <div class="passwordWrapper">
                         <input type="password" id="loginPassword" placeholder="********" required>
-                        <!-- <img src="../assets/img/eye-closed.svg" class="fieldImg"> -->
                         <img src="{{ url_for('static', path='assets/img/eye-open.svg') }}" class="fieldImg">
                     </div>
                 </div>

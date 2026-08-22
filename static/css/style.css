@@ -364,3 +364,11 @@ body {
     cursor: pointer;
 }
 
+/* Error Messages */
+.errorMessage {
+    background-color: #f89595ad;
+    color: #b30e0e;
+    text-align: center;
+    font-size: 0.8rem;
+    padding: 0.7rem 0;
+}
