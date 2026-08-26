@@ -3,11 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
-    <script defer src="{{ url_for('static', path='js/main.js') }}"></script> -->
     <link rel="stylesheet" href="../static/css/style.css">
     <script defer src="../static/js/main.js"></script>
-    <!-- comments are for live server testing -->
     <title>Todo List</title>
 </head>
 <body>
@@ -19,17 +16,30 @@
         </div>
     </nav>
     <div class="overlay hidden" id="modalOverlay">
+        <div class="modalAccCreated hidden">
+            <p class="checkMark">✓</p>
+            <h3><b>Completed</b></h3>
+            <p>Success! Your account has been created.</p>
+        </div>
         <div class="modal hidden" id="modalContainer">
             <button type="button" id="closeModal">x</button>
             <form class="panel hidden" id="panelSignUp">
                 <h1>Create account</h1>
                 <div class="field" id="signupUsernameField">
-                    <label for="signupUsername">Username</label>
+                    <div class="fieldTitle">
+                        <label for="signupUsername">Username</label>
+                        <div class="tooltipSymbol hidden" id="usernameTooltip">i</div>
+                        <p class="errorMessage hidden" id="usernameTooltipError">Username is taken already.</p>
+                    </div>
                     <input type="text" id="signupUsername" placeholder="Your Name" required>
                     <p class="errorMessage hidden" id="errorUsername">Username must contain at least (3) characters and (30) at maximum and no special characters.</p>
                 </div>
                 <div class="field" id="signupEmailField">
-                    <label for="signupEmail">Email</label>
+                    <div class="fieldTitle">
+                        <label for="signupEmail">Email</label>
+                        <div class="tooltipSymbol hidden" id="emailTooltip">i</div>
+                        <p class="errorMessage hidden" id="emailTooltipError">Email is taken already.</p>
+                    </div>
                     <input type="email" id="signupEmail" placeholder="yourname@example.com" required>
                     <p class="errorMessage hidden" id="errorEmail">This email address looks wrong.</p>
                 </div>

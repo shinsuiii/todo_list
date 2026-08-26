@@ -16,21 +16,9 @@ def generate_password(password_string: str):
     salt = bcrypt.gensalt(rounds=12)
     return bcrypt.hashpw(password, salt)
 
-# def verify_password(id: int, password_str: str):
-#     return bcrypt.checkpw(password_str.encode("utf-8"), )
-
-def insert_account(user_info):
+def insert_account(user_info: dict):
     with psycopg.connect(connection_params, autocommit=True) as connection:
         with connection.cursor() as cursor:
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS users (
-                    acc_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-                    username VARCHAR(30),
-                    email TEXT,
-                    password_hash TEXT
-                );
-            ''')
-
             account_info = {
                 "username": user_info.username,
                 "email": user_info.email,
@@ -41,3 +29,16 @@ def insert_account(user_info):
                 'INSERT INTO users (username, email, password_hash) VALUES (%(username)s, %(email)s, %(password_hash)s);',
                 account_info
             )
+
+def check_user_exists(text_type, identifier):
+    with psycopg.connect(connection_params, autocommit=True) as connection:
+        with connection.cursor() as cursor:
+            identifier_value: dict = {"identifier": identifier}
+            if text_type == "email":
+                cursor.execute('SELECT EXISTS (SELECT 1 FROM users WHERE email = %(identifier)s);', identifier_value)
+                email_exists: bool = cursor.fetchone()[0]
+                return True if email_exists else False
+            else:
+                cursor.execute('SELECT EXISTS (SELECT 1 FROM users WHERE username = %(identifier)s);', identifier_value)
+                username_exists: bool = cursor.fetchone()[0]
+                return True if username_exists else False

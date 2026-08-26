@@ -22,6 +22,11 @@ const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
 const closeFormBtn = document.getElementById('closeModal')
 
+const usernameTooltip = document.getElementById('usernameTooltip')
+const usernameTooltipError = document.getElementById('usernameTooltipError')
+const emailTooltip = document.getElementById('emailTooltip')
+const emailTooltipError = document.getElementById('emailTooltipError')
+
 const eyeIcons = document.querySelectorAll('.fieldImg')
 const remPerError = 3
 
@@ -57,10 +62,20 @@ window.addEventListener('keydown', (event) => {
         hideModal()
     }
 })
-// confirms reload of website
-// window.addEventListener('beforeunload', (event) => {
-//     event.preventDefault()
-// })
+
+usernameTooltip.addEventListener('mouseenter', () => {
+    usernameTooltipError.classList.remove('hidden')
+})
+usernameTooltip.addEventListener('mouseleave', () => {
+    usernameTooltipError.classList.add('hidden')
+})
+
+emailTooltip.addEventListener('mouseenter', () => {
+    emailTooltipError.classList.remove('hidden')
+})
+emailTooltip.addEventListener('mouseleave', () => {
+    emailTooltipError.classList.add('hidden')
+})
 
 eyeIcons.forEach(eye => {
     eye.addEventListener('click', (event) => {
@@ -78,14 +93,30 @@ eyeIcons.forEach(eye => {
 createAccountBtn.addEventListener('click', async (event) => {
     event.preventDefault()
     createAccountBtn.disabled = true
+    if (document.activeElement.tagName === 'INPUT') document.activeElement.blur()
     
-    const user_info = {
-        username: signupUsernameField.value,
-        email: signupEmailField.value,
-        password: signupPasswordField.value,
+    const [usernameExists, emailExists] = await Promise.all([
+        checkUserExistence('text', signupUsernameField.value),
+        checkUserExistence('email', signupEmailField.value)
+    ])
+    const visibleErrors = signupForm.querySelectorAll('.errorMessage:not(.hidden)').length
+
+    if (!usernameExists && !emailExists && visibleErrors === 0) {
+        const modalCreatedAccount = document.querySelector('.modalAccCreated')
+        const user_info = {
+            username: signupUsernameField.value,
+            email: signupEmailField.value,
+            password: signupPasswordField.value,
+        }
+        await createAccount(user_info)
+        hideModal()
+        overlay.classList.remove('hidden')
+        modalCreatedAccount.classList.remove('hidden')
+        setTimeout(() => {
+            overlay.classList.add('hidden')
+            modalCreatedAccount.classList.add('hidden')
+        }, 4000)
     }
-    console.log(user_info)
-    await createAccount(user_info)
     createAccountBtn.disabled = false
 })
 
@@ -116,25 +147,45 @@ function adjustModalHeight() {
     modal.style.height = `${baseHeight + (visibleErrors * remPerError)}rem`
 }
 
-function checkField (field, regex, error) {
-    verified = field.value.trim()
-    if (regex.test(verified)) {
-        error.classList.add('hidden')
-    } else {
-        error.classList.remove('hidden')
-    }
+function checkField (field, error, regex) {
+    error.classList.toggle('hidden', regex.test(field.value.trim()))
     adjustModalHeight()
 }
 
-function blurValidation (field, regex, error) {
+async function checkUserExistence(text_type, identifier) {
+    if (text_type === 'password') return false
+    try {
+        const exists = await getUser(text_type, identifier)
+        const tooltip = text_type === 'email' ? emailTooltip : usernameTooltip
+        tooltip.classList.toggle('hidden', !exists)
+        return exists    
+    } catch (error) {
+        error.log('Error fetching data: ', error)
+        return false
+    }
+}
+
+function blurValidation (field, error, regex) {
     let blurred = false
     field.addEventListener('input', () => {
-        if (blurred) checkField(field, regex, error)
+        if (blurred) {
+            checkField(field, error, regex)
+        }
     })
-    field.addEventListener('blur', () => {
+    field.addEventListener('blur', async () => {
         blurred = true
-        checkField(field, regex, error)
+        checkField(field, error, regex)
+        await checkUserExistence(field.type, field.value)
     })
+}
+
+async function getUser(text_type, identifier) {
+    const params = new URLSearchParams({
+        text_type: text_type,
+        identifier: identifier
+    })
+    const response = await fetch(`http://127.0.0.1:8000/users?${params.toString()}`)
+    return await response.json()
 }
 
 async function createAccount(user_info) {
@@ -147,7 +198,7 @@ async function createAccount(user_info) {
             password: user_info.password,
         })
     })
-    const user = await response.json()
+    return await response.json()
 }
 
 
@@ -232,7 +283,6 @@ async function createTask(todo_name) {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({'name': todo_name})
     })
-
     return await response.json()
 }
 
@@ -242,7 +292,6 @@ async function updateTask(id, update) {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({'update': update})
     })
-
     return await response.json()
 }
 
@@ -250,7 +299,6 @@ async function deleteTask(id) {
     const response = await fetch(`http://127.0.0.1:8000/todos/${id}`,{
         method: 'DELETE'
     })
-    
     return await response.json()
 }
 
@@ -260,7 +308,7 @@ addTaskBtn.addEventListener('click', (event) => {
 
 
 
-blurValidation(signupUsernameField, regexUsername, document.getElementById('errorUsername'))
-blurValidation(signupEmailField, regexEmail, document.getElementById('errorEmail'))
-blurValidation(signupPasswordField, regexPassword, document.getElementById('errorPassword'))
+blurValidation(signupUsernameField, document.getElementById('errorUsername'), regexUsername)
+blurValidation(signupEmailField, document.getElementById('errorEmail'), regexEmail)
+blurValidation(signupPasswordField, document.getElementById('errorPassword'), regexPassword)
 getTasks()
