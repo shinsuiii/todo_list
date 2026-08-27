@@ -21,6 +21,11 @@
             <h3><b>Completed</b></h3>
             <p>Success! Your account has been created.</p>
         </div>
+        <div class="modalAccLogin hidden">
+            <p class="checkMark">✓</p>
+            <h3><b>Logged In</b></h3>
+            <p>Success! You have logged in successfully.</p>
+        </div>
         <div class="modal hidden" id="modalContainer">
             <button type="button" id="closeModal">x</button>
             <form class="panel hidden" id="panelSignUp">
@@ -58,17 +63,18 @@
             </form>
             <form class="panel hidden" id="panelLogIn">
                 <h1>Log in</h1>
-                <div class="field" id="loginEmailField">
-                    <label for="loginEmail">Email</label>
-                    <input type="email" id="loginEmail" placeholder="yourname@example.com" required>
+                <div class="field" id="loginIdentifierField">
+                    <label for="loginIdentifier">Username / Email</label>
+                    <input type="text" id="loginIdentifier" placeholder="Your username or email (@)" required>
                 </div>
                 <div class="field" id="loginPasswordField">
                     <label for="loginPassword">Password</label>
                     <div class="passwordWrapper">
                         <input type="password" id="loginPassword" placeholder="********" required>
-                        <img src="{{ url_for('static', path='assets/img/eye-open.svg') }}" class="fieldImg">
+                        <img src="{{ url_for('static', path='assets/img/eye-closed.svg') }}" class="fieldImg">
                     </div>
                 </div>
+                <p class="errorMessage hidden" id="errorLogin">Username / email or password is incorrect.</p>
                 <button type="submit" id="loginAccountBtn"><b>Log in</b></button>
                 <div class="switchText">
                     <p>Don't have an an account? <a id="switchToSignup">Create account</a></p>

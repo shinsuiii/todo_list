@@ -365,7 +365,7 @@ body {
     cursor: pointer;
 }
 
-.modalAccCreated {
+.modalAccCreated, .modalAccLogin {
     background-color: var(--white);
     padding: 2rem 2rem 3rem 2rem;
     border-radius: 5px;
@@ -374,7 +374,7 @@ body {
     justify-content: center;
     align-items: center;
 }
-.modalAccCreated .checkMark {
+.modalAccCreated .checkMark, .modalAccLogin .checkMark {
     background-color: #318f31;
     color: var(--white);
     width: 5rem;
@@ -384,11 +384,11 @@ body {
     text-align: center;
     align-content: center;
 }
-.modalAccCreated h3 {
+.modalAccCreated h3, .modalAccLogin h3 {
     margin-top: 1.3rem;
     margin-bottom: 0.8rem;
 }
-.modalAccCreated p {
+.modalAccCreated p, .modalAccLogin p {
     color: var(--gray);
 }
 

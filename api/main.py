@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.exceptions import RequestValidationError
 from database.todo_operation import get_stored_tasks, insert_task, update_task, delete_task
-from database.signup_login import insert_account, check_user_exists
+from database.signup_login import insert_account, check_user_exists, login_to_account
 
 
 
@@ -53,10 +53,14 @@ class UserLogin(BaseModel):
     identifier: str
     password: str
 
-@app.post("/users")
+@app.get("/signup/users")
+def get_users(text_type: str, identifier: str):
+    return check_user_exists(text_type, identifier)
+
+@app.post("/signup/users")
 def create_account(user: UserRegister):
     return insert_account(user)
 
-@app.get("/users")
-def get_users(text_type: str, identifier: str):
-    return check_user_exists(text_type, identifier)
+@app.post("/login/users")
+def login_account(user: UserLogin):
+    return login_to_account(user)

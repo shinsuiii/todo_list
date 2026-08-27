@@ -3,24 +3,29 @@ const container = document.getElementById('todo-main')
 const addTaskBtn = document.getElementById('add-task')
 const overlay = document.getElementById('modalOverlay')
 const modal = document.getElementById('modalContainer')
+const closeFormBtn = document.getElementById('closeModal')
 
 const signupBtn = document.getElementById('signupBtn')
 const loginBtn = document.getElementById('loginBtn')
+
 const signupForm = document.getElementById('panelSignUp')
 const loginForm = document.getElementById('panelLogIn')
+
 const switchToSignup = document.getElementById('switchToSignup')
 const switchToLogin = document.getElementById('switchToLogin')
+
 const createAccountBtn = document.getElementById('createAccountBtn')
 const loginAccountBtn = document.getElementById('loginAccountBtn')
+
 const signupUsernameField = document.getElementById('signupUsername')
 const signupEmailField = document.getElementById('signupEmail')
 const signupPasswordField = document.getElementById('signupPassword')
-const loginEmailField = document.getElementById('loginEmail')
+const loginIdentifierField = document.getElementById('loginIdentifier')
 const loginPasswordField = document.getElementById('loginPassword')
+
 const regexUsername = /^[a-zA-Z0-9_ ]{3,30}$/
 const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
-const closeFormBtn = document.getElementById('closeModal')
 
 const usernameTooltip = document.getElementById('usernameTooltip')
 const usernameTooltipError = document.getElementById('usernameTooltipError')
@@ -103,21 +108,54 @@ createAccountBtn.addEventListener('click', async (event) => {
 
     if (!usernameExists && !emailExists && visibleErrors === 0) {
         const modalCreatedAccount = document.querySelector('.modalAccCreated')
+
         const user_info = {
             username: signupUsernameField.value,
             email: signupEmailField.value,
             password: signupPasswordField.value,
         }
         await createAccount(user_info)
+
         hideModal()
         overlay.classList.remove('hidden')
         modalCreatedAccount.classList.remove('hidden')
         setTimeout(() => {
             overlay.classList.add('hidden')
             modalCreatedAccount.classList.add('hidden')
-        }, 4000)
+        }, 3000)
+
+        signupForm.querySelectorAll('input').forEach(inputField => inputField.value = '')
     }
     createAccountBtn.disabled = false
+})
+
+loginAccountBtn.addEventListener('click', async (event) => {
+    event.preventDefault()
+    loginAccountBtn.disabled = true
+    if (loginIdentifierField.value === '' || loginPasswordField.value === '') return false
+
+    const login_info = {
+        identifier: loginIdentifierField.value,
+        password: loginPasswordField.value
+    }
+    const login_success = await loginToAccount(login_info)
+    const errorLogin = document.getElementById('errorLogin')
+    const modalLoginSuccessfully = document.querySelector('.modalAccLogin')
+
+    if (login_success) {
+        hideModal()
+        overlay.classList.remove('hidden')
+        modalLoginSuccessfully.classList.remove('hidden')
+        setTimeout(() => {
+            overlay.classList.add('hidden')
+            modalLoginSuccessfully.classList.add('hidden')
+        }, 3000);
+        loginForm.querySelectorAll('input').forEach(inputField => inputField.value = '')
+    }
+
+    errorLogin.classList.toggle('hidden', login_success)
+    adjustModalHeight()
+    loginAccountBtn.disabled = false
 })
 
 function showModal(form) {
@@ -184,18 +222,30 @@ async function getUser(text_type, identifier) {
         text_type: text_type,
         identifier: identifier
     })
-    const response = await fetch(`http://127.0.0.1:8000/users?${params.toString()}`)
+    const response = await fetch(`http://127.0.0.1:8000/signup/users?${params.toString()}`)
     return await response.json()
 }
 
 async function createAccount(user_info) {
-    const response = await fetch('http://127.0.0.1:8000/users', {
+    const response = await fetch('http://127.0.0.1:8000/signup/users', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
             username: user_info.username,
             email: user_info.email,
             password: user_info.password,
+        })
+    })
+    return await response.json()
+}
+
+async function loginToAccount(login_info) {
+    const response = await fetch('http://127.0.0.1:8000/login/users', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            identifier: login_info.identifier,
+            password: login_info.password,
         })
     })
     return await response.json()
