@@ -51,6 +51,7 @@ body {
             var(--pink) 50%,
             var(--darkpink) 100%
     );
+    position: relative;
 }
 
 /* Classes To Be Assigned */
@@ -99,6 +100,83 @@ body {
 }
 .nav-right button:focus {
     outline-color: var(--outlinePink);
+}
+
+#userAccount {
+    padding: 0.25rem 1rem;
+    border-radius: 15px;
+    user-select: none;
+}
+
+#modalUserAccNav {
+    position: absolute;
+    right: 1.6rem;
+    top: 30%;
+    border-radius: 10px;
+    background-color: var(--whitish);
+    width: 20rem;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+#modalUserAccNav p {
+    font-size: 0.78rem;
+    color: #2e2e2e;
+    margin: 1.25rem 0;
+    user-select: none;
+}
+
+.userAccNavBtnContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 2.65rem;
+}
+
+.userAccNavBtn {
+    color: var(--lightpink);
+    border: 1.5px solid var(--lightpink);
+    border-radius: 15px;
+    cursor: pointer;
+    transition: filter 0.3s ease-in-out;
+    padding: 0.5rem 5.5rem;
+    user-select: none;
+}
+.userAccNavBtn:hover {
+    filter: saturate(1.8);
+}
+#userAccNavLogout {
+    background-color: var(--lightpink);
+    color: var(--white);
+    transition: filter 0.3s ease-in-out;
+}
+#userAccNavLogout:hover {
+    filter: saturate(1.8);
+}
+
+#userAccNavCloseBtn {
+    position: absolute;
+    right: 0.75rem;
+    top: 0.75rem;
+    background: transparent;
+    border: 1px solid #2e2e2e93;
+    color: #2e2e2e;
+    cursor: pointer;
+    font-size: 1rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    padding-bottom: 0.5rem;
+    padding-right: 0.42rem;
+    transition: color 0.15s ease-in-out, border-color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+    user-select: none;
+}
+#userAccNavCloseBtn:hover {
+    color: var(--white);
+    border-color: var(--lightpink);
+    background-color: var(--lightpink);
 }
 
 /* Todo List Main */

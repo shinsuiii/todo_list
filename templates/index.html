@@ -13,8 +13,17 @@
         <div class="nav-right">
             <button class="nav-link" id="loginBtn">Log In</button>
             <button class="nav-link" id="signupBtn">Sign Up</button>
+            <button type="button" class="hidden" id="userAccount">USERNAME</button>
         </div>
     </nav>
+    <div class="modalUserAcc hidden" id="modalUserAccNav">
+        <p>Developed by Shanesuiii</p>
+        <button type="button" id="userAccNavCloseBtn">x</button>
+        <div class="userAccNavBtnContainer">
+            <button type="button" class="userAccNavBtn" id="userAccNavLogin">Switch Account</button>
+            <button type="button" class="userAccNavBtn" id="userAccNavLogout">Log Out</button>
+        </div>
+    </div>
     <div class="overlay hidden" id="modalOverlay">
         <div class="modalAccCreated hidden">
             <p class="checkMark">✓</p>

@@ -35,9 +35,23 @@ const emailTooltipError = document.getElementById('emailTooltipError')
 const eyeIcons = document.querySelectorAll('.fieldImg')
 const remPerError = 3
 
+const modalUserAccNav = document.getElementById('modalUserAccNav')
+const userAccountNav = document.getElementById('userAccount')
+const userAccNavClose = document.getElementById('userAccNavCloseBtn')
+const userAccNavLogin = document.getElementById('userAccNavLogin')
+const userAccNavLogout = document.getElementById('userAccNavLogout')
+
 
 
 // User Registration
+userAccountNav.addEventListener('click', () => {
+    modalUserAccNav.classList.toggle('hidden', !modalUserAccNav.classList.contains('hidden'))
+})
+
+userAccNavClose.addEventListener('click', () => {
+    modalUserAccNav.classList.add('hidden')
+})
+
 signupBtn.addEventListener('click', () => {
     showModal(signupForm)
     signupUsernameField.focus()
@@ -139,7 +153,7 @@ loginAccountBtn.addEventListener('click', async (event) => {
         password: loginPasswordField.value
     }
     const login_success = await loginToAccount(login_info)
-    const errorLogin = document.getElementById('errorLogin')
+    // const errorLogin = document.getElementById('errorLogin') // IDK WHY I WROTE THIS;
     const modalLoginSuccessfully = document.querySelector('.modalAccLogin')
 
     if (login_success) {

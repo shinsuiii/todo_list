@@ -1,7 +1,12 @@
 import os
+import jwt
 import bcrypt
 import psycopg
 from dotenv import load_dotenv
+from fastapi.security import OAuth2PasswordBearer
+from datetime import datetime, timedelta, timezone
+
+
 
 load_dotenv()
 connection_params: str = f"""
@@ -11,12 +16,18 @@ connection_params: str = f"""
     host=localhost port=5432
 """
 
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = "HS256"
+oauth2_scheme_optional = OAuth2PasswordBearer(tokenUrl="login", auto_error=False)
+
+
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     plain_bytes: bytes = plain_password.encode("utf-8")
     hashed_bytes: bytes = hashed_password.encode("utf-8")
     return bcrypt.checkpw(plain_bytes, hashed_bytes)
 
-def login_account(login_info) -> bool:
+def check_account(login_info) -> bool:
     with psycopg.connect(connection_params, autocommit=True) as connection:
         with connection.cursor() as cursor:
             if "@" in login_info.identifier:
@@ -33,3 +44,18 @@ def login_account(login_info) -> bool:
                     return verify_password(login_info.password, user_row[0])
                 else:
                     return False
+
+def login_to_account(login_info) -> dict | False:
+    with psycopg.connect(connection_params, autocommit=True) as connection:
+        with connection.cursor() as cursor:
+            acc_exists = check_account(login_info)
+            if acc_exists:
+                payload = {
+                    "sub": login_info.identifier,
+                    "iat": datetime.now(timezone.utc),
+                    "exp": datetime.now(timezone.utc) + timedelta(minutes=1),
+                }
+                token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+                return {"access_token": token, "token_type": "bearer"}
+            else:
+                return False

@@ -3,6 +3,8 @@ import bcrypt
 import psycopg
 from dotenv import load_dotenv
 
+
+
 load_dotenv()
 connection_params: str = f"""
     dbname=todo_db
@@ -11,15 +13,12 @@ connection_params: str = f"""
     host=localhost port=5432
 """
 
+
+
 def generate_password(password_string: str) -> str:
     password = password_string.encode("utf-8")
     salt = bcrypt.gensalt(rounds=12)
     return bcrypt.hashpw(password, salt).decode("utf-8")
-
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    plain_bytes: bytes = plain_password.encode("utf-8")
-    hashed_bytes: bytes = hashed_password.encode("utf-8")
-    return bcrypt.checkpw(plain_bytes, hashed_bytes)
 
 def insert_account(user_info) -> None:
     with psycopg.connect(connection_params, autocommit=True) as connection:

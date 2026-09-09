@@ -1,11 +1,12 @@
 from pydantic import BaseModel
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
+from fastapi.security import OAuth2PasswordBearer
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.exceptions import RequestValidationError
 from database.todo_operation import get_stored_tasks, insert_task, update_task, delete_task
 from database.signup import insert_account, check_user_exists
-from database.login import login_account
+from database.login import login_to_account
+from database.jwt_check import create_todo_optional
 
 
 
@@ -31,8 +32,11 @@ def get_stored_todos(name: str | None = None):
     return get_stored_tasks(name)
 
 @app.post("/todos")
-def create_todo(todo: TodoCreate):
-    return insert_task(todo.name)
+def create_todo(todo: TodoCreate, current_user = Depends(create_todo_optional)):
+    if current_user:
+        return insert_task(todo.name, current_user)
+    else:
+        return {"id": None, "task": todo.name} # Figure out how to store temporary tasks
 
 @app.patch("/todos/{id}")
 def update_todo(id: int, todo: TodoUpdate):
@@ -67,4 +71,4 @@ class UserLogin(BaseModel):
 
 @app.post("/login/users")
 def login_account(user: UserLogin):
-    return login_account(user)
+    return login_to_account(user)
