@@ -46,21 +46,3 @@ def check_user_exists(text_type: str, identifier: str) -> bool:
                 cursor.execute('SELECT EXISTS (SELECT 1 FROM users WHERE username = %(identifier)s);', identifier_value)
                 username_exists: bool = cursor.fetchone()[0]
                 return True if username_exists else False
-
-def login_to_account(login_info) -> bool:
-    with psycopg.connect(connection_params, autocommit=True) as connection:
-        with connection.cursor() as cursor:
-            if "@" in login_info.identifier:
-                cursor.execute('SELECT password_hash FROM users WHERE email = %(identifier)s', {"identifier": login_info.identifier})
-                user_row = cursor.fetchone()
-                if user_row:
-                    return verify_password(login_info.password, user_row[0])
-                else:
-                    return False
-            else:
-                cursor.execute('SELECT password_hash FROM users WHERE username = %(identifier)s', {"identifier": login_info.identifier})
-                user_row = cursor.fetchone()
-                if user_row:
-                    return verify_password(login_info.password, user_row[0])
-                else:
-                    return False
