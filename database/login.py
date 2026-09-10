@@ -50,8 +50,15 @@ def login_to_account(login_info) -> dict | False:
         with connection.cursor() as cursor:
             acc_exists = check_account(login_info)
             if acc_exists:
+                if "@" in login_info.identifier:
+                    cursor.execute('SELECT acc_id FROM users WHERE email = %(identifier)s', {"identifier": login_info.identifier})
+                    user_id = cursor.fetchone()
+                else:
+                    cursor.execute('SELECT acc_id FROM users WHERE username = %(identifier)s', {"identifier": login_info.identifier})
+                    user_id = cursor.fetchone()
+
                 payload = {
-                    "sub": login_info.identifier,
+                    "sub": user_id[0],
                     "iat": datetime.now(timezone.utc),
                     "exp": datetime.now(timezone.utc) + timedelta(minutes=1),
                 }

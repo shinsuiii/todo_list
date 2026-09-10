@@ -19,8 +19,8 @@ def create_todo_optional(token: str | None = Depends(oauth2_scheme_optional)) ->
 
     try: 
         payload: dict = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
-        identifier: str = payload.get("sub")
+        acc_id: str = payload.get("sub")
     except jwt.InvalidTokenError:
         return None
 
-    return identifier
+    return acc_id
