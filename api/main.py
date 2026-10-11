@@ -23,13 +23,16 @@ class TodoCreate(BaseModel):
 class TodoUpdate(BaseModel):
     update: bool | str
 
+
 @app.get("/")
 def index_todo(request: Request):
     return templates.TemplateResponse(request=request, name="index.html")
 
+
 @app.get("/todos")
 def get_stored_todos(name: str | None = None):
     return get_stored_tasks(name)
+
 
 @app.post("/todos")
 def create_todo(todo: TodoCreate, current_user = Depends(create_todo_optional)):
@@ -38,9 +41,11 @@ def create_todo(todo: TodoCreate, current_user = Depends(create_todo_optional)):
     else:
         return {"id": None, "task": todo.name} # Figure out how to store temporary tasks
 
+
 @app.patch("/todos/{id}")
 def update_todo(id: int, todo: TodoUpdate):
     return update_task(id, todo.update)
+
 
 @app.delete("/todos/{id}")
 def delete_todo(id: int):
@@ -54,9 +59,11 @@ class UserRegister(BaseModel):
     email: str
     password: str
 
+
 @app.get("/signup/users")
 def get_users(text_type: str, identifier: str):
     return check_user_exists(text_type, identifier)
+
 
 @app.post("/signup/users")
 def create_account(user: UserRegister):
@@ -68,6 +75,7 @@ def create_account(user: UserRegister):
 class UserLogin(BaseModel):
     identifier: str
     password: str
+
 
 @app.post("/login/users")
 def login_account(user: UserLogin):

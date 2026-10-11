@@ -14,8 +14,11 @@ connection_params: str = f"""
     host=localhost port=5432
 """
 
+
+
 def time_now():
     return datetime.now().replace(microsecond=0)
+
 
 def get_stored_tasks(todo_name: str | None):
     stored_tasks: list = []
@@ -37,6 +40,7 @@ def get_stored_tasks(todo_name: str | None):
                     return {"task_exists": True}
             else:
                 return stored_tasks
+
 
 def insert_task(name: str):
     with psycopg.connect(connection_params, autocommit=True) as connection:
@@ -60,6 +64,7 @@ def insert_task(name: str):
             }
             cursor.execute('INSERT INTO todo_list VALUES (%(todo_name)s, %(completed)s, %(created_at)s, %(updated_at)s);', todo_data)
             return todo_data
+
 
 def update_task(id: int, update: bool | str):
     with psycopg.connect(connection_params, autocommit=True) as connection:
@@ -92,6 +97,7 @@ def update_task(id: int, update: bool | str):
 
             else:
                 return "Update must be a bool or a str." 
+
 
 def delete_task(id: int):
     with psycopg.connect(connection_params, autocommit=True) as connection:
